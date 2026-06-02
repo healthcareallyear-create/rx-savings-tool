@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Medication Program Explorer</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col antialiased">
+
+  <!-- Header Banner -->
+  <header class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white shadow-xl relative overflow-hidden">
+    <!-- Abstract background decorations -->
+    <div class="absolute inset-0 opacity-10">
+      <div class="absolute -top-40 -left-40 w-96 h-96 rounded-full bg-teal-400 blur-3xl"></div>
+      <div class="absolute -bottom-40 -right-40 w-96 h-96 rounded-full bg-indigo-400 blur-3xl"></div>
+    </div>
+    
+    <div class="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8 relative z-10">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+        <div>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-teal-500/10 text-teal-300 mb-3 border border-teal-500/20">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+            Alternative Prescription Solutions
+          </span>
+          <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-100 to-indigo-200 bg-clip-text text-transparent">
+            Rx Savings Program Hub
+          </h1>
+          <p class="mt-2 text-slate-300 text-sm sm:text-base max-w-2xl">
+            Compare subscription models, zero-copay generics, transparent cost-plus models, and local pick-up alternatives to simplify your medication coverage.
+          </p>
+        </div>
+        <div class="flex flex-wrap gap-3">
+          <button onclick="openWizard()" class="inline-flex items-center gap-2 px-5 py-3 bg-teal-500 hover:bg-teal-400 text-slate-950 font-bold text-sm rounded-xl transition duration-200 shadow-lg shadow-teal-500/10 hover:shadow-teal-400/20 hover:-translate-y-0.5">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+            Find My Best Match
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Interactive Dashboard -->
+  <main class="flex-grow max-w-7xl w-full mx-auto px-4 py-8 sm:px-6 lg:px-8">
+    
+    <!-- Controls & Filters Section -->
+    <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm mb-8 flex flex-col lg:flex-row lg:items-center justify-between gap-5">
+      
+      <!-- Search -->
+      <div class="relative w-full lg:w-96">
+        <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+        </span>
+        <input type="text" id="searchBar" onkeyup="filterPrograms()" placeholder="Search plans, features, or keywords..." class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all">
+      </div>
+      
+      <!-- Filter Toggles -->
+      <div class="flex flex-wrap items-center gap-2 overflow-x-auto custom-scrollbar pb-1 lg:pb-0">
+        <button onclick="setCategory('all')" id="btn-all" class="cat-btn px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl bg-slate-900 text-white shadow-sm transition-all whitespace-nowrap">
+          All Programs
+        </button>
+        <button onclick="setCategory('subscription')" id="btn-subscription" class="cat-btn px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl bg-white text-slate-600 hover:text-slate-950 hover:bg-slate-100 border border-slate-200 transition-all whitespace-nowrap">
+          Subscriptions ($0 / Wholesale)
+        </button>
+        <button onclick="setCategory('cost-plus')" id="btn-cost-plus" class="cat-btn px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl bg-white text-slate-600 hover:text-slate-950 hover:bg-slate-100 border border-slate-200 transition-all whitespace-nowrap">
+          Transparent Cost-Plus
+        </button>
+        <button onclick="setCategory('retail')" id="btn-retail" class="cat-btn px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl bg-white text-slate-600 hover:text-slate-950 hover:bg-slate-100 border border-slate-200 transition-all whitespace-nowrap">
+          Retail & Cash Pickup
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Active Filter Banner & Multi-Compare Bar Info -->
+    <div class="flex items-center justify-between mb-4 px-1">
+      <p id="resultsCount" class="text-sm font-medium text-slate-500">Showing all 7 prescription solutions</p>
+      <div class="flex items-center gap-1.5 text-xs text-indigo-600 font-semibold bg-indigo-50 px-2.5 py-1 rounded-md">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+        Compare up to 3 programs
+      </div>
+    </div>
+
+    <!-- Programs Grid -->
+    <div id="programsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Cards will be populated dynamically -->
+    </div>
+
+  </main>
+
+  <!-- Side comparison Drawer/Bar (Sticky Bottom overlay) -->
+  <div id="comparisonTray" class="fixed bottom-0 inset-x-0 bg-white border-t border-slate-200 shadow-[0_-10px_25px_rgba(0,0,0,0.05)] transform translate-y-full transition-transform duration-300 ease-out z-40">
+    <div class="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-4">
+        <div class="p-2.5 bg-indigo-50 rounded-xl text-indigo-600">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
+        </div>
+        <div>
+          <h3 class="font-bold text-slate-900 text-sm sm:text-base">Compare Prescription Solutions</h3>
+          <p class="text-xs text-slate-500" id="comparisonText">Select at least 2 programs to view a side-by-side spec comparison</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-3 w-full sm:w-auto justify-end">
+        <div id="comparedBadges" class="flex gap-1.5 overflow-hidden">
+          <!-- Small badges of selected elements -->
+        </div>
+        <button id="compareBtn" onclick="openComparisonModal()" disabled class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed text-white font-bold text-sm rounded-xl shadow-lg transition duration-200 whitespace-nowrap">
+          Compare Selected (0)
+        </button>
+        <button onclick="clearComparison()" class="text-xs font-semibold text-slate-500 hover:text-slate-800 underline px-1">
+          Clear All
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Comparison Modal Dialog -->
+  <div id="comparisonModal" class="fixed inset-0 bg-slate-950/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-5xl w-full max-h-[85vh] overflow-hidden flex flex-col transform scale-95 transition-transform duration-300">
+      
+      <!-- Modal Header -->
+      <div class="p-6 border-b border-slate-100 flex items-center justify-between bg-gradient-to-r from-slate-900 to-indigo-950 text-white">
+        <div class="flex items-center gap-3">
+          <div class="p-2 bg-indigo-500/15 rounded-xl text-indigo-400">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 002 2h2a2 2 0 002-2z"></path></svg>
+          </div>
+          <div>
+            <h2 class="text-xl font-bold">Side-by-Side Comparison</h2>
+            <p class="text-xs text-indigo-200">Analyzing key features, costs, and plan structures</p>
+          </div>
+        </div>
+        <button onclick="closeComparisonModal()" class="p-1.5 hover:bg-white/10 rounded-lg text-slate-300 hover:text-white transition-all">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+      </div>
+
+      <!-- Modal Body (Compare Grid) -->
+      <div class="flex-grow overflow-auto custom-scrollbar p-6 bg-slate-50">
+        <div class="grid grid-cols-4 border border-slate-200 rounded-xl overflow-hidden bg-white text-sm" id="comparisonGrid">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="p-4 border-t border-slate-100 bg-white flex justify-end">
+        <button onclick="closeComparisonModal()" class="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold rounded-xl text-sm transition-all">
+          Close Comparison Window
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Smart Recommendation Wizard Modal -->
+  <div id="wizardModal" class="fixed inset-0 bg-slate-950/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-xl w-full overflow-hidden flex flex-col transform scale-95 transition-transform duration-300">
+      
+      <!-- Wizard Header -->
+      <div class="p-6 border-b border-slate-100 bg-gradient-to-r from-slate-900 to-indigo-950 text-white flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="p-2 bg-teal-400/15 rounded-xl text-teal-400">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+          </div>
+          <div>
+            <h2 class="text-lg font-bold">Personalized Rx Matcher</h2>
+            <p class="text-xs text-slate-300">Find the program that saves you the most money</p>
+          </div>
+        </div>
+        <button onclick="closeWizard()" class="p-1.5 hover:bg-white/10 rounded-lg text-slate-300 hover:text-white transition-all">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+      </div>
+
+      <!-- Wizard Questions -->
+      <div class="p-6 flex-grow" id="wizardContent">
+        <!-- Question 1 Container -->
+        <div id="q1" class="space-y-4">
+          <span class="text-xs font-bold text-indigo-600 tracking-wider uppercase">Step 1 of 3</span>
+          <h3 class="text-lg font-bold text-slate-900">How many prescription medications do you take consistently?</h3>
+          <p class="text-sm text-slate-500">This helps us evaluate if subscription or cost-plus flat-rate models fit you best.</p>
+          
+          <div class="grid grid-cols-1 gap-3 pt-2">
+            <button onclick="nextStep(1, 'few')" class="w-full text-left p-4 rounded-xl border border-slate-200 hover:border-indigo-500 hover:bg-indigo-50/40 font-medium transition-all flex items-center justify-between">
+              <div>
+                <p class="text-slate-800 font-bold">1 to 2 Medications</p>
+                <p class="text-xs text-slate-500">Mostly acute or minor chronic drugs</p>
+              </div>
+              <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+            </button>
+            <button onclick="nextStep(1, 'multiple')" class="w-full text-left p-4 rounded-xl border border-slate-200 hover:border-indigo-500 hover:bg-indigo-50/40 font-medium transition-all flex items-center justify-between">
+              <div>
+                <p class="text-slate-800 font-bold">3 or More Medications</p>
+                <p class="text-xs text-slate-500">Regular daily maintenance medications</p>
+              </div>
+              <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Question 2 Container -->
+        <div id="q2" class="space-y-4 hidden">
+          <span class="text-xs font-bold text-indigo-600 tracking-wider uppercase">Step 2 of 3</span>
+          <h3 class="text-lg font-bold text-slate-900">How would you prefer to receive your medications?</h3>
+          <p class="text-sm text-slate-500">Some plans rely exclusively on home delivery, while others offer local retail network perks.</p>
+          
+          <div class="grid grid-cols-1 gap-3 pt-2">
+            <button onclick="nextStep(2, 'mail')" class="w-full text-left p-4 rounded-xl border border-slate-200 hover:border-indigo-500 hover:bg-indigo-50/40 font-medium transition-all flex items-center justify-between">
+              <div>
+                <p class="text-slate-800 font-bold">Delivered to My Home</p>
+                <p class="text-xs text-slate-500">Convenient, automatic mail delivery</p>
+              </div>
+              <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+            </button>
+            <button onclick="nextStep(2, 'pickup')" class="w-full text-left p-4 rounded-xl border border-slate-200 hover:border-indigo-500 hover:bg-indigo-50/40 font-medium transition-all flex items-center justify-between">
+              <div>
+                <p class="text-slate-800 font-bold">Pick Up Locally</p>
+                <p class="text-xs text-slate-500">Prefer driving to a nearby neighborhood pharmacy</p>
+              </div>
+              <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Question 3 Container -->
+        <div id="q3" class="space-y-4 hidden">
+          <span class="text-xs font-bold text-indigo-600 tracking-wider uppercase">Step 3 of 3</span>
+          <h3 class="text-lg font-bold text-slate-900">What is your primary financial priority for medications?</h3>
+          <p class="text-sm text-slate-500">This connects you directly with the program layout matching your exact budget style.</p>
+          
+          <div class="grid grid-cols-1 gap-3 pt-2">
+            <button onclick="nextStep(3, 'subscription-interest')" class="w-full text-left p-4 rounded-xl border border-slate-200 hover:border-indigo-500 hover:bg-indigo-50/40 font-medium transition-all flex items-center justify-between">
+              <div>
+                <p class="text-slate-800 font-bold">Predictable, Flat Monthly Pricing</p>
+                <p class="text-xs text-slate-500">I like paying a flat membership for $0 generic plans</p>
+              </div>
+              <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+            </button>
+            <button onclick="nextStep(3, 'cost-plus-interest')" class="w-full text-left p-4 rounded-xl border border-slate-200 hover:border-indigo-500 hover:bg-indigo-50/40 font-medium transition-all flex items-center justify-between">
+              <div>
+                <p class="text-slate-800 font-bold">Direct Wholesale/Cost-Plus Rates</p>
+                <p class="text-xs text-slate-500">No monthly memberships, just pay actual direct costs</p>
+              </div>
+              <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Results Slide -->
+        <div id="wizardResult" class="space-y-4 hidden">
+          <div class="p-4 bg-teal-50 border border-teal-200 rounded-2xl flex items-start gap-3">
+            <div class="p-2 bg-teal-500 text-slate-950 rounded-lg mt-0.5">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+            </div>
+            <div>
+              <h3 class="font-bold text-slate-900">Your Recommended Match Found!</h3>
+              <p class="text-xs text-slate-600">Based on your answers, we recommend focusing on this program first:</p>
+            </div>
+          </div>
+          
+          <!-- Recommendation Highlight Card -->
+          <div id="recommendationCard" class="bg-white border-2 border-indigo-600 p-5 rounded-2xl shadow-md">
+            <!-- Dynamic Injection -->
+          </div>
+
+          <div class="pt-2 flex gap-3">
+            <button onclick="resetWizard()" class="flex-grow py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-sm rounded-xl transition">
+              Start Over
+            </button>
+            <button onclick="closeWizard()" class="flex-grow py-3 bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm rounded-xl transition">
+              Explore All Plans
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-slate-900 text-slate-400 py-10 mt-16 border-t border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-xs sm:text-sm space-y-4">
+      <p class="font-semibold text-slate-300">Medication Hub Explorer &copy; 2026</p>
+      <p class="max-w-2xl mx-auto text-slate-500 leading-relaxed">
+        Disclaimer: This search tool and the programs featured herein are independent platforms and discount benefits. They do not constitute insurance, health insurance policies, or Medicare prescription coverage. Please consult your primary care physician before switching medications.
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    // Complete structured program data
+    const programs = [
+      {
+        id: "amazon",
+        name: "Amazon Pharmacy (RxPass)",
+        tagline: "Flat $5/mo for eligible common generics",
+        pricing_mechanic: "$5/Month Subscription",
+        copay: "$0 Flat copay for listed drugs",
+        best_for: "Common chronic conditions (blood pressure, diabetes, cholesterol)",
+        network_type: "Home Mail-Order Delivery",
+        requires_membership: "Yes (Requires Prime + $5 RxPass)",
+        category: "subscription",
+        url: "https://pharmacy.amazon.com/",
+        logo_bg: "from-amber-100 to-amber-200 text-amber-900",
+        logo_text: "A",
+        details: [
+          "Delivers all eligible medications on the formulary completely free of any extra cost beyond the flat $5 subscription fee.",
+          "Features a strong list of top-prescribed high blood pressure, cholesterol, acid reflux, and mental health medications.",
+          "Integrates cleanly with normal Amazon orders, prescription transfers, and standard customer support."
+        ]
+      },
+      {
+        id: "scriptco",
+        name: "ScriptCo Pharmacy",
+        tagline: "Absolute wholesale direct pricing with 0% markups",
+        pricing_mechanic: "Member Subscription ($10-$12/mo)",
+        copay: "Wholesale Drug Cost (No markup)",
+        best_for: "Patients taking multiple heavy generic maintenance medications",
+        network_type: "Home Mail-Order Delivery",
+        requires_membership: "Yes (Quarterly or Annual Billing)",
+        category: "subscription",
+        url: "https://scriptco.com/",
+        logo_bg: "from-emerald-100 to-emerald-200 text-emerald-900",
+        logo_text: "S",
+        details: [
+          "Bypasses insurance and PBM models entirely to sell drugs direct-to-consumer at verified direct wholesale pricing.",
+          "Greatest cost-saving impact if you take three or more maintenance medications that are heavily marked up at retail shops.",
+          "Requires a steady active membership to unlock access to their secure wholesale formulary database."
+        ]
+      },
+      {
+        id: "costplus",
+        name: "Mark Cuban Cost Plus Drug Company",
+        tagline: "The gold standard for completely transparent drug pricing",
+        pricing_mechanic: "Cost + 15% Markup + $3 Fee + Shipping",
+        copay: "Direct Cost pricing (No insurance needed)",
+        best_for: "Both common and specialty generics without subscription commitments",
+        network_type: "Home Mail-Order Delivery",
+        requires_membership: "No Membership Required",
+        category: "cost-plus",
+        url: "https://www.markcubancostplusdrugcompany.com/",
+        logo_bg: "from-blue-100 to-blue-200 text-blue-900",
+        logo_text: "MC",
+        details: [
+          "Pioneered direct pricing visibility, disclosing the transparent cost of every element: generic cost, a flat 15% margin, a $3 handling charge, and simple flat-rate mail fees.",
+          "Massive database of complex generics, often beating traditional insurance tier layouts and high deductibles.",
+          "Requires a digital prescription submitted directly from your medical professional's office."
+        ]
+      },
+      {
+        id: "honeybee",
+        name: "Honeybee Health",
+        tagline: "Direct-to-consumer digital pharmacy with custom manufacturer selection",
+        pricing_mechanic: "Transparent Direct Out-of-Pocket Prices",
+        copay: "No Insurance / Cash-Only Model",
+        best_for: "Users who prefer selecting specific generic manufacturers or custom shapes/colors",
+        network_type: "Home Mail-Order Delivery",
+        requires_membership: "No Membership Required",
+        category: "cost-plus",
+        url: "https://honeybeehealth.com/",
+        logo_bg: "from-yellow-100 to-yellow-200 text-yellow-900",
+        logo_text: "H",
+        details: [
+          "Allows clients to choose specific generic manufacturers to maintain pill consistency (color, shape, binding agents).",
+          "Charges direct clear prices with no hidden PBM adjustments, copays, or monthly subscription fees.",
+          "Offers simple, fast home delivery with responsive, easy-access pharmacist consultations."
+        ]
+      },
+      {
+        id: "rxoutreach",
+        name: "Rx Outreach",
+        tagline: "Certified national nonprofit mail-order pharmacy for lower incomes",
+        pricing_mechanic: "Tier-Based Flat Cash Pricing",
+        copay: "Clear low-cost flat rates",
+        best_for: "Low-to-moderate income individuals, underinsured, or uninsured patients",
+        network_type: "Home Mail-Order Delivery",
+        requires_membership: "No Membership (Requires Income Eligibility)",
+        category: "cost-plus",
+        url: "https://rxoutreach.org/",
+        logo_bg: "from-purple-100 to-purple-200 text-purple-900",
+        logo_text: "RX",
+        details: [
+          "Acts as a fully authorized, national nonprofit pharmacy designed to keep costs accessible for individuals and families.",
+          "Features a wide range of chronic generic medications packaged into straightforward 90-day or 180-day supplies.",
+          "Requires checking a basic income eligibility guideline to register and purchase products."
+        ]
+      },
+      {
+        id: "goodrx",
+        name: "GoodRx Companion",
+        tagline: "Premium local retail discount network with direct clinical integration",
+        pricing_mechanic: "Free Card or Premium Subscriptions",
+        copay: "Pre-Negotiated PBM Retail Copays",
+        best_for: "Patients who prefer immediate local pick-up or have urgent acute needs",
+        network_type: "Over 70,000 Retail Partner Pharmacies",
+        requires_membership: "Optional (Offers Free and Premium Companion Tiers)",
+        category: "retail",
+        url: "https://www.goodrx.com/companion",
+        logo_bg: "from-rose-100 to-rose-200 text-rose-900",
+        logo_text: "G",
+        details: [
+          "Provides immediate retail pre-negotiated PBM discount codes accepted across virtually every major neighborhood chain.",
+          "Excellent for urgent, acute prescription requirements (antibiotics, pain relievers) that cannot wait for shipping.",
+          "Premium versions offer expanded family coverages, clean telehealth consult integrations, and deeper savings tiers."
+        ]
+      },
+      {
+        id: "walmart",
+        name: "Walmart $4 Prescriptions",
+        tagline: "Legendary low-cost cash formulary for local pickup",
+        pricing_mechanic: "$4 for 30-Day / $10 for 90-Day generic supply",
+        copay: "Flat Cash Price (No insurance needed)",
+        best_for: "Standard, routine generics with fast, in-person convenience",
+        network_type: "In-Person Walmart Pharmacy Pick-Up",
+        requires_membership: "No Membership Required",
+        category: "retail",
+        url: "https://www.walmart.com/cp/4-prescriptions/1078664",
+        logo_bg: "from-sky-100 to-sky-200 text-sky-900",
+        logo_text: "W",
+        details: [
+          "Requires no registration, no memberships, and no complex approvals to purchase generic options at designated rates.",
+          "Covers extensive generic classes including cardiac care, diabetes treatment, thyroid issues, and primary mental health support.",
+          "Includes flat-rate tiers of $4 for standard 30-day supplies and $10 for a full 90-day maintenance stock."
+        ]
+      }
+    ];
+
+    let activeCategory = 'all';
+    let selectedForCompare = [];
+
+    // Initialize layout
+    window.onload = function() {
+      renderPrograms();
+    };
+
+    // Render cards
+    function renderPrograms() {
+      const grid = document.getElementById('programsGrid');
+      grid.innerHTML = '';
+      
+      const filtered = programs.filter(p => {
+        const matchesCategory = activeCategory === 'all' || p.category === activeCategory;
+        const matchesSearch = p.name.toLowerCase().includes(getSearchVal()) || 
+                              p.tagline.toLowerCase().includes(getSearchVal()) ||
+                              p.best_for.toLowerCase().includes(getSearchVal());
+        return matchesCategory && matchesSearch;
+      });
+
+      document.getElementById('resultsCount').innerText = `Showing ${filtered.length} prescription solution${filtered.length === 1 ? '' : 's'}`;
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div class="col-span-full py-16 text-center bg-white rounded-2xl border border-slate-200">
+            <svg class="w-12 h-12 text-slate-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <p class="text-slate-500 font-bold text-lg">No matching plans found</p>
+            <p class="text-slate-400 text-sm mt-1">Try resetting your category or updating your search parameters.</p>
+          </div>
+        `;
+        return;
+      }
+
+      filtered.forEach(p => {
+        const isCompared = selectedForCompare.includes(p.id);
+        const card = document.createElement('div');
+        card.className = `bg-white rounded-2xl border ${isCompared ? 'border-indigo-500 shadow-md ring-1 ring-indigo-500/10' : 'border-slate-200 shadow-sm'} hover:shadow-md transition-all duration-200 overflow-hidden flex flex-col`;
+        
+        card.innerHTML = `
+          <div class="p-6 flex-grow">
+            <!-- Header of card -->
+            <div class="flex items-start justify-between gap-4 mb-4">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br ${p.logo_bg} flex items-center justify-center font-extrabold text-sm shadow-inner shrink-0">
+                  ${p.logo_text}
+                </div>
+                <div>
+                  <h3 class="font-bold text-slate-900 text-base leading-snug hover:text-indigo-600 transition-colors">${p.name}</h3>
+                  <span class="inline-block mt-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wider uppercase bg-slate-100 text-slate-600">
+                    ${p.requires_membership}
+                  </span>
+                </div>
+              </div>
+              <button onclick="toggleCompare('${p.id}')" class="p-2 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all ${isCompared ? 'bg-indigo-600 text-white shadow-sm hover:bg-indigo-700' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
+                ${isCompared ? 'Selected' : 'Compare'}
+              </button>
+            </div>
+
+            <!-- Body info -->
+            <p class="text-xs sm:text-sm text-slate-600 font-medium line-clamp-2 mb-4">
+              ${p.tagline}
+            </p>
+
+            <div class="space-y-3 pt-3 border-t border-slate-100 text-xs">
+              <div class="flex justify-between items-center">
+                <span class="text-slate-400 font-medium">Pricing Model</span>
+                <span class="font-bold text-slate-800 bg-indigo-50/50 text-indigo-700 px-2.5 py-0.5 rounded-md border border-indigo-100/30">${p.pricing_mechanic}</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-slate-400 font-medium">Delivery Network</span>
+                <span class="font-semibold text-slate-700">${p.network_type}</span>
+              </div>
+              <div class="pt-1.5">
+                <span class="text-slate-400 font-medium block mb-1">Target Match</span>
+                <p class="text-slate-700 leading-normal bg-slate-50 p-2 rounded-lg text-[11px] font-medium border border-slate-100">
+                  ${p.best_for}
+                </p>
+              </div>
+            </div>
+
+            <!-- Expandable Panel -->
+            <div id="details-${p.id}" class="hidden mt-4 pt-4 border-t border-slate-100 space-y-2.5 animate-fadeIn">
+              <span class="text-slate-400 text-xs font-bold uppercase tracking-wider block">Key Benefits</span>
+              <ul class="space-y-1.5">
+                ${p.details.map(detail => `
+                  <li class="flex items-start gap-2 text-xs text-slate-600">
+                    <svg class="w-3.5 h-3.5 text-teal-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                    <span>${detail}</span>
+                  </li>
+                `).join('')}
+              </ul>
+            </div>
+          </div>
+
+          <!-- Bottom buttons footer of card -->
+          <div class="px-6 pb-6 pt-0 bg-slate-50/50 border-t border-slate-100/60 flex items-center gap-2">
+            <button onclick="toggleDetails('${p.id}')" id="btn-toggle-${p.id}" class="flex-grow py-2.5 text-xs font-bold text-slate-600 hover:text-slate-800 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition shadow-sm">
+              Show Details
+            </button>
+            <a href="${p.url}" target="_blank" class="px-4 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl shadow-sm transition flex items-center justify-center gap-1.5 shrink-0">
+              Visit Site
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+            </a>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    // Helper search getters
+    function getSearchVal() {
+      return document.getElementById('searchBar').value.toLowerCase();
+    }
+
+    // Filtering logic
+    function setCategory(cat) {
+      activeCategory = cat;
+      document.querySelectorAll('.cat-btn').forEach(btn => {
+        btn.className = "cat-btn px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl bg-white text-slate-600 hover:text-slate-950 hover:bg-slate-100 border border-slate-200 transition-all whitespace-nowrap";
+      });
+      
+      const activeBtn = document.getElementById(`btn-${cat}`);
+      if (activeBtn) {
+        activeBtn.className = "cat-btn px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl bg-slate-900 text-white shadow-sm transition-all whitespace-nowrap";
+      }
+      renderPrograms();
+    }
+
+    function filterPrograms() {
+      renderPrograms();
+    }
+
+    // Toggle details panels
+    function toggleDetails(id) {
+      const panel = document.getElementById(`details-${id}`);
+      const btn = document.getElementById(`btn-toggle-${id}`);
+      if (panel.classList.contains('hidden')) {
+        panel.classList.remove('hidden');
+        btn.innerText = "Hide Details";
+      } else {
+        panel.classList.add('hidden');
+        btn.innerText = "Show Details";
+      }
+    }
+
+    // Multi-Compare logic
+    function toggleCompare(id) {
+      const idx = selectedForCompare.indexOf(id);
+      if (idx > -1) {
+        selectedForCompare.splice(idx, 1);
+      } else {
+        if (selectedForCompare.length >= 3) {
+          showNotifyModal("Comparison Limit Reached", "You can only compare up to 3 programs at the same time.");
+          return;
+        }
+        selectedForCompare.push(id);
+      }
+      updateComparisonTray();
+      renderPrograms();
+    }
+
+    function updateComparisonTray() {
+      const tray = document.getElementById('comparisonTray');
+      const text = document.getElementById('comparisonText');
+      const countBtn = document.getElementById('compareBtn');
+      const badgesContainer = document.getElementById('comparedBadges');
+      
+      badgesContainer.innerHTML = '';
+
+      if (selectedForCompare.length > 0) {
+        tray.classList.remove('translate-y-full');
+        
+        // Add tiny badges of compared ones
+        selectedForCompare.forEach(id => {
+          const p = programs.find(item => item.id === id);
+          badgesContainer.innerHTML += `
+            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold bg-indigo-50 border border-indigo-100 text-indigo-700 animate-fadeIn">
+              ${p.logo_text}
+              <button onclick="toggleCompare('${p.id}')" class="text-indigo-400 hover:text-indigo-800 ml-1 font-black">&times;</button>
+            </span>
+          `;
+        });
+
+        if (selectedForCompare.length >= 2) {
+          text.innerText = "Ready! View your customized side-by-side spec comparison table.";
+          countBtn.disabled = false;
+          countBtn.innerText = `Compare Selected (${selectedForCompare.length})`;
+        } else {
+          text.innerText = "Select at least 2 programs to view side-by-side specs.";
+          countBtn.disabled = true;
+          countBtn.innerText = `Compare Selected (${selectedForCompare.length})`;
+        }
+      } else {
+        tray.classList.add('translate-y-full');
+      }
+    }
+
+    function clearComparison() {
+      selectedForCompare = [];
+      updateComparisonTray();
+      renderPrograms();
+    }
+
+    // Comparison Modal Builder
+    function openComparisonModal() {
+      const modal = document.getElementById('comparisonModal');
+      const grid = document.getElementById('comparisonGrid');
+      
+      const list = selectedForCompare.map(id => programs.find(p => p.id === id));
+      
+      // Determine cols template
+      const colCount = list.length + 1; // features row + selected rows
+      grid.className = `grid grid-cols-${colCount} border border-slate-200 rounded-xl overflow-hidden bg-white text-xs sm:text-sm`;
+
+      let html = '';
+
+      // Feature keys to list
+      const rows = [
+        { label: "Program Name", key: "name", customClass: "font-bold text-slate-900 bg-slate-50/70" },
+        { label: "Monthly Premium", key: "pricing_mechanic", customClass: "font-semibold text-indigo-600" },
+        { label: "Standard Copay", key: "copay", customClass: "text-slate-700" },
+        { label: "Network Coverage", key: "network_type", customClass: "text-slate-700" },
+        { label: "Membership Required", key: "requires_membership", customClass: "text-slate-600 font-semibold" },
+        { label: "Ideal Target Profile", key: "best_for", customClass: "text-slate-600 italic bg-slate-50/30" }
+      ];
+
+      rows.forEach((row, rowIndex) => {
+        // Label col
+        html += `
+          <div class="p-4 border-b border-r border-slate-200 bg-slate-100 font-bold text-slate-800 flex items-center">
+            ${row.label}
+          </div>
+        `;
+        // Data cols
+        list.forEach(p => {
+          html += `
+            <div class="p-4 border-b border-r last:border-r-0 border-slate-200 flex items-center justify-center text-center ${row.customClass || ''}">
+              ${p[row.key]}
+            </div>
+          `;
+        });
+      });
+
+      // Actions row at bottom
+      html += `
+        <div class="p-4 bg-slate-50 font-semibold text-slate-500 flex items-center">
+          Action Links
+        </div>
+      `;
+      list.forEach(p => {
+        html += `
+          <div class="p-4 bg-slate-50 flex justify-center items-center">
+            <a href="${p.url}" target="_blank" class="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl shadow transition inline-flex items-center gap-1.5">
+              Launch Site
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+            </a>
+          </div>
+        `;
+      });
+
+      grid.innerHTML = html;
+
+      // Show modal
+      modal.classList.remove('opacity-0', 'pointer-events-none');
+      modal.firstElementChild.classList.remove('scale-95');
+    }
+
+    function closeComparisonModal() {
+      const modal = document.getElementById('comparisonModal');
+      modal.classList.add('opacity-0', 'pointer-events-none');
+      modal.firstElementChild.classList.add('scale-95');
+    }
+
+    // Wizard Logic
+    let wizardState = {};
+
+    function openWizard() {
+      const modal = document.getElementById('wizardModal');
+      resetWizard();
+      modal.classList.remove('opacity-0', 'pointer-events-none');
+      modal.firstElementChild.classList.remove('scale-95');
+    }
+
+    function closeWizard() {
+      const modal = document.getElementById('wizardModal');
+      modal.classList.add('opacity-0', 'pointer-events-none');
+      modal.firstElementChild.classList.add('scale-95');
+    }
+
+    function resetWizard() {
+      wizardState = {};
+      document.getElementById('q1').classList.remove('hidden');
+      document.getElementById('q2').classList.add('hidden');
+      document.getElementById('q3').classList.add('hidden');
+      document.getElementById('wizardResult').classList.add('hidden');
+    }
+
+    function nextStep(step, answer) {
+      if (step === 1) {
+        wizardState.medCount = answer;
+        document.getElementById('q1').classList.add('hidden');
+        document.getElementById('q2').classList.remove('hidden');
+      } else if (step === 2) {
+        wizardState.delivery = answer;
+        document.getElementById('q2').classList.add('hidden');
+        document.getElementById('q3').classList.remove('hidden');
+      } else if (step === 3) {
+        wizardState.priority = answer;
+        document.getElementById('q3').classList.add('hidden');
+        calculateRecommendation();
+      }
+    }
+
+    function calculateRecommendation() {
+      let recId = 'costplus'; // Default fallback
+
+      if (wizardState.medCount === 'multiple' && wizardState.delivery === 'mail') {
+        if (wizardState.priority === 'subscription-interest') {
+          recId = 'scriptco';
+        } else {
+          recId = 'costplus';
+        }
+      } else if (wizardState.medCount === 'few' && wizardState.delivery === 'mail') {
+        if (wizardState.priority === 'subscription-interest') {
+          recId = 'amazon';
+        } else {
+          recId = 'honeybee';
+        }
+      } else if (wizardState.delivery === 'pickup') {
+        if (wizardState.medCount === 'few') {
+          recId = 'walmart';
+        } else {
+          recId = 'goodrx';
+        }
+      }
+
+      const p = programs.find(item => item.id === recId);
+      const container = document.getElementById('recommendationCard');
+      
+      container.innerHTML = `
+        <div class="flex items-start gap-4">
+          <div class="w-12 h-12 rounded-2xl bg-gradient-to-br ${p.logo_bg} flex items-center justify-center font-extrabold text-base shadow-inner shrink-0">
+            ${p.logo_text}
+          </div>
+          <div>
+            <h4 class="font-bold text-slate-900 text-lg leading-snug">${p.name}</h4>
+            <p class="text-xs text-indigo-600 font-semibold">${p.pricing_mechanic}</p>
+            <p class="text-sm text-slate-600 mt-2 leading-relaxed">
+              Based on your requirements, ${p.name} is the strongest structural match. It specializes in <strong>${p.best_for}</strong>.
+            </p>
+            <div class="mt-4 flex items-center gap-2">
+              <a href="${p.url}" target="_blank" class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-md transition flex items-center gap-1.5">
+                Launch Search Portal
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+              </a>
+              <button onclick="addRecToCompare('${p.id}')" class="px-3.5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-xl transition">
+                Add to Comparison Table
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+
+      document.getElementById('wizardResult').classList.remove('hidden');
+    }
+
+    function addRecToCompare(id) {
+      if (!selectedForCompare.includes(id)) {
+        if (selectedForCompare.length >= 3) {
+          showNotifyModal("Comparison Limit Reached", "You can only compare up to 3 programs. Please remove an existing program first.");
+          return;
+        }
+        selectedForCompare.push(id);
+        updateComparisonTray();
+        renderPrograms();
+      }
+      closeWizard();
+    }
+
+    // Custom non-alert notification modal
+    function showNotifyModal(title, msg) {
+      const notification = document.createElement('div');
+      notification.className = "fixed bottom-5 right-5 z-50 bg-slate-900 text-white p-5 rounded-2xl shadow-2xl max-w-sm flex flex-col gap-2 border border-slate-700 animate-slideUp";
+      notification.innerHTML = `
+        <div class="flex items-center justify-between">
+          <span class="font-bold text-sm text-indigo-400">${title}</span>
+          <button class="text-slate-400 hover:text-white font-bold text-lg" onclick="this.parentElement.parentElement.remove()">&times;</button>
+        </div>
+        <p class="text-xs text-slate-300">${msg}</p>
+      `;
+      document.body.appendChild(notification);
+      setTimeout(() => {
+        if (notification) notification.remove();
+      }, 5000);
+    }
+  </script>
+
+  <style>
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fadeIn {
+      animation: fadeIn 0.25s ease-out forwards;
+    }
+    .animate-slideUp {
+      animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+  </style>
+
+</body>
+</html>
